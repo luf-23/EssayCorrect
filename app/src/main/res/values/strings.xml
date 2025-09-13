@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">EssayCorrect</string>
+    <string name="app_logo">应用Logo</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="remember_password">记住密码</string>
+    <string name="forgot_password">忘记密码?</string>
+    <string name="login">登录</string>
+    <string name="or_login_with">或使用以下方式登录</string>
+    <string name="login_with_google">使用Google登录</string>
+    <string name="login_with_facebook">使用Facebook登录</string>
+    <string name="login_with_twitter">使用Twitter登录</string>
+    <string name="dont_have_account">没有账户？</string>
+    <string name="register_now">立即注册</string>
+    <string name="character">
+        【实时分析反馈】
+        1.输入时即时标注语法错误，红色下划线提示
+        2.语句流畅度实时评分（1-100分）
+        3.逻辑连贯性视觉化展示
+        \n
+        【详细批改报告】
+        1.语法修正：精准定位并修正错误
+        2.流畅度优化：提供句子重组建议
+        3.逻辑增强：指出逻辑漏洞和改进方案
+        4.词汇提升：推荐更精准的词语替换
+        \n
+        【写作建议】
+        1.提供多种写作思路和角度
+        2.推荐合适的文章结构模板
+        3.生成相关主题的素材和案例
+    </string>
+</resources>
