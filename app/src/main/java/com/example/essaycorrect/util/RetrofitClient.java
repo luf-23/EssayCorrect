@@ -14,8 +14,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
 
     private static Retrofit retrofit = null;
-    //private static final String BASE_URL = "http://192.168.171.105:8080/"; // 你的后端基础 URL
-    private static final String BASE_URL = "http://luf.woyioii.cn/api/";
+    private static final String BASE_URL = "http://192.168.171.105:8080/"; // 你的后端基础 URL
+    //private static final String BASE_URL = "http://luf.woyioii.cn/api/";
 
     public static ApiService getApiService(Context context) {
         if (retrofit == null) {

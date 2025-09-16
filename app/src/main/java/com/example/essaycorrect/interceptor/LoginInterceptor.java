@@ -36,7 +36,6 @@ public class LoginInterceptor implements Interceptor {
             newRequest = originalRequest;
         }
 
-
         Response response = chain.proceed(newRequest);
 
         if (response.code() == 401){

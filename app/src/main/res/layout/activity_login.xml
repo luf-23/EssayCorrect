@@ -79,32 +79,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/passwordLayout">
-
-        <CheckBox
-            android:id="@+id/rememberPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="记住密码"
-            android:textColor="#666666"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/forgotPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="忘记密码?"
-            android:textColor="#6200EE"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:padding="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@id/passwordLayout"/>
 
     <!-- 登录按钮 -->
     <Button
@@ -112,11 +87,13 @@
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginTop="32dp"
-        android:background="#6200EE"
+        android:background="@color/design_default_color_secondary"
+        android:backgroundTint="@color/colorAccent"
         android:elevation="4dp"
         android:text="登录"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
+        android:textColorHint="@color/colorAccent"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

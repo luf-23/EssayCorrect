@@ -2,6 +2,8 @@
 package com.example.essaycorrect;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity{
     private StringBuilder content;
     private ImageButton viewSavedButton;
     private ImageButton saveButton;
+    private TextView backButton;
+    private ImageButton copyButton;
 
     private interface GetCategoryIdCallback{
         void onSuccess(Integer categoryId);
@@ -89,6 +93,8 @@ public class MainActivity extends AppCompatActivity{
         content = new StringBuilder();
         viewSavedButton = findViewById(R.id.viewSavedButton);
         saveButton = findViewById(R.id.saveButton);
+        backButton = findViewById(R.id.backButton);
+        copyButton = findViewById(R.id.copyButton);
     }
 
     @SuppressLint("RestrictedApi")
@@ -191,6 +197,20 @@ public class MainActivity extends AppCompatActivity{
 
         viewSavedButton.setOnClickListener(v->{
             startActivity(new Intent(MainActivity.this, SavedArticleActivity.class));
+        });
+        backButton.setOnClickListener(v->{
+            finish();
+        });
+        copyButton.setOnClickListener(v->{
+            String content = aiResponseText.getText().toString();
+            if (content.isEmpty()){
+                Toast.makeText(this, "请先点击提交按钮", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("AI点评", content);
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
         });
     }
 

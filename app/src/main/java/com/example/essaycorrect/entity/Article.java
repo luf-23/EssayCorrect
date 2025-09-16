@@ -12,7 +12,6 @@ public class Article {
 
     public Article(Integer categoryId, String title, String content, String status) {
         this.content = content;
-        this.articleId = articleId;
         this.categoryId = categoryId;
         this.title = title;
         this.status = status;
