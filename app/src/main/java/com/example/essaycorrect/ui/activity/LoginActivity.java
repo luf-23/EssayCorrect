@@ -1,24 +1,20 @@
-
-package com.example.essaycorrect;
+package com.example.essaycorrect.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.essaycorrect.entity.ApiResponse;
-import com.example.essaycorrect.entity.User;
-import com.example.essaycorrect.util.ApiService;
-import com.example.essaycorrect.util.AppStorage;
-import com.example.essaycorrect.util.RetrofitClient;
+import com.example.essaycorrect.R;
+import com.example.essaycorrect.data.model.ApiResponse;
+import com.example.essaycorrect.data.model.User;
+import com.example.essaycorrect.data.network.ApiService;
+import com.example.essaycorrect.utils.AppStorage;
+import com.example.essaycorrect.utils.RetrofitClient;
 import com.google.android.material.textfield.TextInputEditText;
 
 import retrofit2.Call;
@@ -30,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText usernameEditText;
     private TextInputEditText passwordEditText;
     private Button loginButton;
-
     private TextView registerButton;
 
     private interface MyCallback{
@@ -44,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         initView();
-
         setListener();
     }
 
@@ -54,49 +48,64 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
     }
+    
     private void setListener() {
         loginButton.setOnClickListener(v -> {
             String username = usernameEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
-            if (!username.matches("(^\\S{5,16}$)|(^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$)")){
-                if (!username.matches("^\\S{5,16}$")){
-                    Toast.makeText(this, "用户名必须在5~16位", Toast.LENGTH_SHORT).show();
-                }else if (!username.matches("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")){
-                    Toast.makeText(this, "邮箱格式错误", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-            if (!password.matches("^\\S{5,16}$")){
-                Toast.makeText(this, "密码必须在6~16位", Toast.LENGTH_SHORT).show();
+            
+            if (!isValidInput(username, password)) {
                 return;
             }
 
-
-            ApiService apiService = RetrofitClient.getApiService(this);
-            apiService.login(username, password).enqueue(new Callback<ApiResponse>() {
-                @Override
-                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                    if (response.isSuccessful()){
-                        ApiResponse apiResponse = response.body();
-                        if (apiResponse.getCode()==0){
-                            String token = apiResponse.getData().toString();
-                            AppStorage.getInstance(LoginActivity.this).saveToken(token);
-                            saveUserInfo();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(LoginActivity.this, "登录失败:"+apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-                @Override
-                public void onFailure(Call<ApiResponse> call, Throwable t) {
-
-                }
-            });
+            performLogin(username, password);
         });
+        
         registerButton.setOnClickListener(v -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        });
+    }
+
+    private boolean isValidInput(String username, String password) {
+        if (!username.matches("(^\\S{5,16}$)|(^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$)")){
+            if (!username.matches("^\\S{5,16}$")){
+                Toast.makeText(this, "用户名必须在5~16位", Toast.LENGTH_SHORT).show();
+            }else if (!username.matches("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")){
+                Toast.makeText(this, "邮箱格式错误", Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }
+        
+        if (!password.matches("^\\S{5,16}$")){
+            Toast.makeText(this, "密码必须在6~16位", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        
+        return true;
+    }
+
+    private void performLogin(String username, String password) {
+        ApiService apiService = RetrofitClient.getApiService(this);
+        apiService.login(username, password).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response.isSuccessful()){
+                    ApiResponse apiResponse = response.body();
+                    if (apiResponse.getCode()==0){
+                        String token = apiResponse.getData().toString();
+                        AppStorage.getInstance(LoginActivity.this).saveToken(token);
+                        saveUserInfo();
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(LoginActivity.this, "登录失败:"+apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "网络错误", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -142,14 +151,15 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse<User>> call, Throwable t) {
-
+                Toast.makeText(LoginActivity.this, "网络错误", Toast.LENGTH_SHORT).show();
             }
         });
     }
+    
     private void defaultCategory(Integer userId, MyCallback callback) {
         ApiService apiService = RetrofitClient.getApiService(this);
-        apiService.getDefaultCategoryId(userId, "默认分类","用于服务安卓项目").
-                enqueue(new Callback<ApiResponse<Integer>>() {
+        apiService.getDefaultCategoryId(userId, "默认分类","用于服务安卓项目")
+                .enqueue(new Callback<ApiResponse<Integer>>() {
                     @Override
                     public void onResponse(Call<ApiResponse<Integer>> call, Response<ApiResponse<Integer>> response) {
                         if (response.isSuccessful()){
@@ -162,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<ApiResponse<Integer>> call, Throwable t) {
-
+                        // Handle failure
                     }
                 });
     }

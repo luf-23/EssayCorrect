@@ -25,6 +25,7 @@ android {
             )
         }
     }
+    
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -32,39 +33,31 @@ android {
 }
 
 dependencies {
-    // AndroidX相关
+    // AndroidX核心库
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    // Retrofit网络库相关
+    // 网络请求库
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.converter.scalars)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.gson)
 
-    // 测试相关
+    // SSE支持
+    implementation(libs.okhttp.eventsource.v410)
+
+    // Markdown渲染
+    implementation(libs.core)
+    implementation(libs.ext.tables)
+    implementation(libs.ext.strikethrough)
+    implementation("io.noties.markwon:linkify:4.6.2")
+
+    // 测试库
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    implementation(libs.material.v160)
-
-    implementation(libs.okhttp.eventsource)
-    implementation(libs.okhttp.v4100)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.converter.scalars)
-
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.eventsource.v410) // 使用更新版本
-
-    implementation(libs.core)
-    implementation(libs.ext.tables)    // 表格支持
-    implementation(libs.ext.strikethrough) // 删除线
-    //noinspection UseTomlInstead
-    implementation("io.noties.markwon:linkify:4.6.2")       // 链接自动识别
-
 }

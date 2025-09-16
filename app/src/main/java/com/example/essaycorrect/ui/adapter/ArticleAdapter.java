@@ -1,4 +1,4 @@
-package com.example.essaycorrect.adapter;
+package com.example.essaycorrect.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.essaycorrect.R;
-import com.example.essaycorrect.entity.Article;
+import com.example.essaycorrect.data.model.Article;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,18 +21,16 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     private List<Article> articleList;
     private OnItemClickListener onItemClickListener;
 
-    // 定义点击事件接口
     public interface OnItemClickListener {
         void onItemClick(Article article, int position);
     }
 
-    // 设置点击监听器的方法
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.onItemClickListener = listener;
-    }
-
     public ArticleAdapter(List<Article> articleList) {
         this.articleList = articleList;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
     }
 
     @NonNull
@@ -42,6 +40,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 .inflate(R.layout.list_item_article, parent, false);
         return new ViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Article article = articleList.get(position);
@@ -56,10 +55,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             }
         });
 
-        // 还可以设置长按事件
+        // 设置长按事件
         holder.itemView.setOnLongClickListener(v -> {
             if (onItemClickListener != null) {
-                // 这里可以处理长按事件
+                // 可以处理长按事件，比如显示删除选项
                 return true;
             }
             return false;
@@ -68,7 +67,15 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return articleList.size();
+        return articleList != null ? articleList.size() : 0;
+    }
+
+    /**
+     * 更新数据
+     */
+    public void updateArticles(List<Article> newArticles) {
+        this.articleList = newArticles;
+        notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -84,6 +91,9 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         }
     }
 
+    /**
+     * 格式化时间显示
+     */
     public static String formatTime(String originalTime) {
         if (originalTime == null || originalTime.isEmpty()) {
             return "未知时间";
@@ -94,12 +104,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault());
             Date date = originalFormat.parse(originalTime);
 
-            // 格式化为更友好的显示格式：yyyy-MM-dd HH:mm
+            // 格式化为更友好的显示格式
             SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             return targetFormat.format(date);
 
         } catch (ParseException e) {
-            e.printStackTrace();
             // 如果解析失败，尝试其他可能的格式
             return tryAlternativeFormats(originalTime);
         }
@@ -109,23 +118,24 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
      * 尝试其他可能的时间格式
      */
     private static String tryAlternativeFormats(String timeString) {
-        try {
-            // 尝试不带毫秒的格式
-            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault());
-            Date date = format1.parse(timeString);
-            SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-            return targetFormat.format(date);
-        } catch (ParseException e1) {
+        String[] formats = {
+            "yyyy-MM-dd'T'HH:mm:ssXXX",
+            "yyyy-MM-dd'T'HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss"
+        };
+
+        for (String format : formats) {
             try {
-                // 尝试最简单的格式
-                SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-                Date date = format2.parse(timeString);
+                SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
+                Date date = dateFormat.parse(timeString);
                 SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
                 return targetFormat.format(date);
-            } catch (ParseException e2) {
-                // 如果所有格式都解析失败，返回原始字符串或截断T字符
-                return timeString.replace("T", " ");
+            } catch (ParseException e) {
+                // 继续尝试下一个格式
             }
         }
+
+        // 如果所有格式都解析失败，返回处理过的字符串
+        return timeString.replace("T", " ");
     }
 }

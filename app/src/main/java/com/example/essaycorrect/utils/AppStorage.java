@@ -1,9 +1,9 @@
-package com.example.essaycorrect.util;
+package com.example.essaycorrect.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.essaycorrect.entity.User;
+import com.example.essaycorrect.data.model.User;
 import com.google.gson.Gson;
 
 public class AppStorage {
@@ -27,23 +27,31 @@ public class AppStorage {
         return instance;
     }
 
-    // 保存 token
+    /**
+     * 保存用户令牌
+     */
     public void saveToken(String token) {
         prefs.edit().putString(KEY_TOKEN, token).apply();
     }
 
-    // 获取 token
+    /**
+     * 获取用户令牌
+     */
     public String getToken() {
         return prefs.getString(KEY_TOKEN, null);
     }
 
-    // 保存用户信息
+    /**
+     * 保存用户信息
+     */
     public void saveUserInfo(User user) {
         String userJson = gson.toJson(user);
         prefs.edit().putString(KEY_USER_INFO, userJson).apply();
     }
 
-    // 获取用户信息
+    /**
+     * 获取用户信息
+     */
     public User getUserInfo() {
         String userJson = prefs.getString(KEY_USER_INFO, null);
         if (userJson != null) {
@@ -52,12 +60,16 @@ public class AppStorage {
         return null;
     }
 
-    // 清除所有数据（退出登录）
+    /**
+     * 清除所有数据（退出登录）
+     */
     public void clearAll() {
         prefs.edit().clear().apply();
     }
 
-    // 检查是否已登录
+    /**
+     * 检查是否已登录
+     */
     public boolean isLoggedIn() {
         return getToken() != null;
     }

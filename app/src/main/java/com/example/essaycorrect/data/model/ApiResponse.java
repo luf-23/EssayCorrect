@@ -1,4 +1,4 @@
-package com.example.essaycorrect.entity;
+package com.example.essaycorrect.data.model;
 
 public class ApiResponse<T> {
     private Integer code;
@@ -8,15 +8,9 @@ public class ApiResponse<T> {
     public ApiResponse() {
     }
 
-    public void setCode(Integer code) {
+    public ApiResponse(Integer code, String message, T data) {
         this.code = code;
-    }
-
-    public void setMessage(String message) {
         this.message = message;
-    }
-
-    public void setData(T data) {
         this.data = data;
     }
 
@@ -24,17 +18,23 @@ public class ApiResponse<T> {
         return code;
     }
 
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public T getData() {
         return data;
     }
 
-    public ApiResponse(Integer code, String message, T data) {
-        this.code = code;
-        this.message = message;
+    public void setData(T data) {
         this.data = data;
     }
 }

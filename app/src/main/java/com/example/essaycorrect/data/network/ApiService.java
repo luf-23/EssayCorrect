@@ -1,9 +1,8 @@
-package com.example.essaycorrect.util;
+package com.example.essaycorrect.data.network;
 
-
-import com.example.essaycorrect.entity.ApiResponse;
-import com.example.essaycorrect.entity.Article;
-import com.example.essaycorrect.entity.User;
+import com.example.essaycorrect.data.model.ApiResponse;
+import com.example.essaycorrect.data.model.Article;
+import com.example.essaycorrect.data.model.User;
 
 import java.util.List;
 
@@ -14,6 +13,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ApiService {
+    
     @POST("user/login")
     Call<ApiResponse> login(@Query("usernameOrEmail") String usernameOrEmail, @Query("password") String password);
 
@@ -24,10 +24,10 @@ public interface ApiService {
     Call<ApiResponse> captcha(@Query("email") String email);
 
     @POST("user/verify")
-    Call<ApiResponse<Boolean>> verify (@Query("email") String email, @Query("captcha") String captcha);
+    Call<ApiResponse<Boolean>> verify(@Query("email") String email, @Query("captcha") String captcha);
 
     @POST("user/register")
-    Call<ApiResponse> register(@Query("username") String username, @Query("password") String password,@Query("email") String email);
+    Call<ApiResponse> register(@Query("username") String username, @Query("password") String password, @Query("email") String email);
 
     @POST("category/default")
     Call<ApiResponse> setDefaultCategory(@Query("userId") Integer userId);
@@ -36,13 +36,11 @@ public interface ApiService {
     Call<ApiResponse<User>> getUserInfoByName(@Query("username") String username);
 
     @GET("category/defaultId")
-    Call<ApiResponse<Integer>> getDefaultCategoryId(@Query("userId") Integer userId, @Query("categoryName") String categoryName,@Query("categoryDescription") String categoryDescription);
+    Call<ApiResponse<Integer>> getDefaultCategoryId(@Query("userId") Integer userId, @Query("categoryName") String categoryName, @Query("categoryDescription") String categoryDescription);
 
     @POST("article/add")
     Call<ApiResponse> add(@Body Article article);
 
     @GET("article/draftList")
-    Call<ApiResponse<List< Article>>> getArticleList(@Query("categoryId") Integer categoryId);
-
-
+    Call<ApiResponse<List<Article>>> getArticleList(@Query("categoryId") Integer categoryId);
 }
